@@ -21,7 +21,7 @@ elif color == '男':
 elif color == '女':
     color_column = '出生数_女【人】'
     
-df=df[df['prod_category'].isin(year)]
+df=df[df['時間軸(年次)'].isin(year)]
 
 st.dataframe(df,width=600,height=200)
 
