@@ -15,6 +15,8 @@ df=df[df['時間軸(年次)'].isin(year)]
 
 st.dataframe(df,width=600,height=200)
 
+df['時間軸(年次)'] = pd.to_numeric(df['時間軸(年次)'], errors='coerce')
+
 df_long = df.melt(
     id_vars='時間軸(年次)',
     value_vars=['出生数_総数【人】', '出生数_男【人】', '出生数_女【人】'],
