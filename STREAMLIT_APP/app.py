@@ -26,10 +26,10 @@ df=df[df['時間軸(年次)'].isin(year)]
 st.dataframe(df,width=600,height=200)
 
 fig=px.scatter(df,
-               x='year',
-               y='num',
+               x='時間軸(年次)',
+               y='出生数_総数【人】',
                color=color_column,
-               labels={'year': '年代', 'num': '出生数'},
+               labels={'時間軸(年次)': '年代', '出生数_総数【人】': '出生数'},
                title='年代別出生数',
                trendline='ols')
 st.plotly_chart(fig)
