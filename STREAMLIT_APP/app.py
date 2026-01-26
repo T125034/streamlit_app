@@ -15,6 +15,8 @@ df['時間軸(年次)'] = df['時間軸(年次)'].str.replace('年', '').astype(
 cols = ['出生数_総数【人】', '出生数_男【人】', '出生数_女【人】']
 for c in cols:
     df[c] = df[c].str.replace(',', '').astype(int)
+    
+df['合計特殊出生率'] = pd.to_numeric(df['合計特殊出生率'], errors='coerce')
 
 
 with st.sidebar:
