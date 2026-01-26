@@ -49,12 +49,13 @@ fig=px.scatter(df_long,
                trendline='ols')
 st.plotly_chart(fig)
 
+st.bar_chart(df.T)
 
 df_bar = df.copy()
 df_bar['時間軸(年次)'] = df_bar['時間軸(年次)'].astype(str)
 
 fig_rate = px.bar(
-    df,
+    df_bar,
     x='時間軸(年次)',
     y='合計特殊出生率',
     title='年代別 合計特殊出生率',
