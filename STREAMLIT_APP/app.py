@@ -29,7 +29,7 @@ df_long['分類'] = df_long['分類'].replace({
 })
 
 
-fig=px.scatter(df,
+fig=px.scatter(df_long,
                x='時間軸(年次)',
                y='出生数_総数【人】',
                color='分類',
