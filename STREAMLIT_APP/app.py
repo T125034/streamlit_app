@@ -28,6 +28,7 @@ df=df[df['時間軸(年次)'].isin(year)]
 
 st.dataframe(df,width=600,height=200)
 
+st.subheader('前年比')
 df_sorted = df.sort_values('時間軸(年次)')
 
 if len(df_sorted) >= 2:
