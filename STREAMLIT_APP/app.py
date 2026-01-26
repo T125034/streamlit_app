@@ -6,6 +6,8 @@ import plotly.express as px
 st.title('人口動態調査 人口動態統計 確定数 出生')
 df=pd.read_csv('FEH_00450011_260126102708.csv')
 
+st.markdown('このアプリは e-Stat の人口動態調査「出生数」のデータを可視化するものです。年代を選択し、男女・合計の出生数の推移を比較できます。')
+
 # 「2023年」→ 2023 に変換
 df['時間軸(年次)'] = df['時間軸(年次)'].str.replace('年', '').astype(int)
 
@@ -23,6 +25,27 @@ with st.sidebar:
 df=df[df['時間軸(年次)'].isin(year)]
 
 st.dataframe(df,width=600,height=200)
+
+df_sorted = df.sort_values('時間軸(年次)')
+latest = df_sorted.iloc[-1]
+prev = df_sorted.iloc[-2]
+
+col1, col2 = st.columns(2)
+
+with col1:
+    st.metric(
+        label="最新年の出生数（合計）",
+        value=f"{latest['出生数_総数【人】']:,} 人",
+        delta=f"{latest['出生数_総数【人】'] - prev['出生数_総数【人】']:,} 人"
+    )
+
+with col2:
+    st.metric(
+        label="最新年の合計特殊出生率",
+        value=latest['合計特殊出生率'],
+        delta=round(latest['合計特殊出生率'] - prev['合計特殊出生率'], 2)
+    )
+
 
 df['時間軸(年次)'] = pd.to_numeric(df['時間軸(年次)'], errors='coerce')
 
