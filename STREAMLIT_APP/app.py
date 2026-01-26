@@ -6,6 +6,15 @@ import plotly.express as px
 st.title('人口動態調査 人口動態統計 確定数 出生')
 df=pd.read_csv('FEH_00450011_260126102708.csv')
 
+# 「2023年」→ 2023 に変換
+df['時間軸(年次)'] = df['時間軸(年次)'].str.replace('年', '').astype(int)
+
+# カンマ付き数値をすべて数値化
+cols = ['出生数_総数【人】', '出生数_男【人】', '出生数_女【人】']
+for c in cols:
+    df[c] = df[c].str.replace(',', '').astype(int)
+
+
 with st.sidebar:
     st.subheader('抽出条件')
     year=st.multiselect('年代を選択してください（複数選択可）',
