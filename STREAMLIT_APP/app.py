@@ -15,7 +15,7 @@ df['時間軸(年次)'] = df['時間軸(年次)'].str.replace('年', '').astype(
 cols = ['出生数_総数【人】', '出生数_男【人】', '出生数_女【人】']
 for c in cols:
     df[c] = df[c].str.replace(',', '').astype(int)
-    
+
 df['合計特殊出生率'] = pd.to_numeric(df['合計特殊出生率'], errors='coerce')
 
 
@@ -29,14 +29,7 @@ df=df[df['時間軸(年次)'].isin(year)]
 st.dataframe(df,width=600,height=200)
 
 df_sorted = df.sort_values('時間軸(年次)')
-latest = df_sorted.iloc[-1]
-prev = df_sorted.iloc[-2]
 
-col1, col2 = st.columns(2)
-
-df_sorted = df.sort_values('時間軸(年次)')
-
-# データが2行以上あるときだけ metric を表示
 if len(df_sorted) >= 2:
     latest = df_sorted.iloc[-1]
     prev = df_sorted.iloc[-2]
@@ -59,7 +52,6 @@ if len(df_sorted) >= 2:
 
 else:
     st.info("※ 指標を表示するには、2 年以上選択してください。")
-
 
 df['時間軸(年次)'] = pd.to_numeric(df['時間軸(年次)'], errors='coerce')
 
