@@ -49,6 +49,10 @@ fig=px.scatter(df_long,
                trendline='ols')
 st.plotly_chart(fig)
 
+with st.expander('出生数グラフの説明を見る'):
+    st.write('このグラフは、合計・男・女の出生数の推移を比較する散布図です。')
+
+
 df_bar = df.copy()
 df_bar['時間軸(年次)'] = df_bar['時間軸(年次)'].astype(str)
 
@@ -59,11 +63,8 @@ fig_rate = px.bar(
     title='年代別 合計特殊出生率',
     labels={'時間軸(年次)': '年代', '合計特殊出生率': '合計特殊出生率'},
 )
-
 st.plotly_chart(fig_rate)
 
-with st.expander("出生数（合計・男・女）の推移グラフ"):
-    st.plotly_chart(fig)
+with st.expander('合計特殊出生率グラフの説明を見る'):
+    st.write('この棒グラフは、各年代の合計特殊出生率を示しています。')
 
-with st.expander("合計特殊出生率の棒グラフ"):
-    st.plotly_chart(fig_rate)
