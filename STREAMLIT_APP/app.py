@@ -49,6 +49,10 @@ fig=px.scatter(df_long,
                trendline='ols')
 st.plotly_chart(fig)
 
+
+df_bar = df.copy()
+df_bar['時間軸(年次)'] = df_bar['時間軸(年次)'].astype(str)
+
 fig_rate = px.bar(
     df,
     x='時間軸(年次)',
