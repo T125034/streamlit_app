@@ -31,7 +31,7 @@ df_long['分類'] = df_long['分類'].replace({
 
 fig=px.scatter(df_long,
                x='時間軸(年次)',
-               y='出生数_総数【人】',
+               y='出生数',
                color='分類',
                labels={'時間軸(年次)': '年代', '出生数_総数【人】': '出生数'},
                title='年代別出生数',
