@@ -32,19 +32,31 @@ prev = df_sorted.iloc[-2]
 
 col1, col2 = st.columns(2)
 
-with col1:
-    st.metric(
-        label="最新年の出生数（合計）",
-        value=f"{latest['出生数_総数【人】']:,} 人",
-        delta=f"{latest['出生数_総数【人】'] - prev['出生数_総数【人】']:,} 人"
-    )
+df_sorted = df.sort_values('時間軸(年次)')
 
-with col2:
-    st.metric(
-        label="最新年の合計特殊出生率",
-        value=latest['合計特殊出生率'],
-        delta=round(latest['合計特殊出生率'] - prev['合計特殊出生率'], 2)
-    )
+# データが2行以上あるときだけ metric を表示
+if len(df_sorted) >= 2:
+    latest = df_sorted.iloc[-1]
+    prev = df_sorted.iloc[-2]
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.metric(
+            label="最新年の出生数（合計）",
+            value=f"{latest['出生数_総数【人】']:,} 人",
+            delta=f"{latest['出生数_総数【人】'] - prev['出生数_総数【人】']:,} 人"
+        )
+
+    with col2:
+        st.metric(
+            label="最新年の合計特殊出生率",
+            value=latest['合計特殊出生率'],
+            delta=round(latest['合計特殊出生率'] - prev['合計特殊出生率'], 2)
+        )
+
+else:
+    st.info("※ 指標を表示するには、2 年以上選択してください。")
 
 
 df['時間軸(年次)'] = pd.to_numeric(df['時間軸(年次)'], errors='coerce')
