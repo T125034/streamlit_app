@@ -43,7 +43,7 @@ if len(df_sorted) >= 2:
     latest = df_sorted.iloc[-1]
     prev = df_sorted.iloc[-2]
 
-    st.write(f"最新年：{int(latest['時間軸(年次)'])} 年  前年：{int(prev['時間軸(年次)'])} 年")
+    st.write(f"最新年：{int(latest['時間軸(年次)'])} 年         前年：{int(prev['時間軸(年次)'])} 年")
 
     #2列のレイアウト
     col1, col2 = st.columns(2)
