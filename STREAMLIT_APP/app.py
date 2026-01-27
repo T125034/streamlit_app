@@ -9,6 +9,7 @@ df=pd.read_csv('FEH_00450011_260126102708.csv')
 st.write('')
 st.write('このアプリは e-Stat の人口動態調査「出生数」のデータを可視化するものです。サイドバーで年代を選択し、男女・合計の出生数の推移を比較できます。')
 st.write('このデータの期間は1899年から2023年で、年次別にみた出生数・出生率（人口千対）・出生性比及び合計特殊出生率を知ることができます。')
+st.write('')
 
 # 「2023年」→ 2023 に変換
 df['時間軸(年次)'] = df['時間軸(年次)'].str.replace('年', '').astype(int)
@@ -42,8 +43,7 @@ if len(df_sorted) >= 2:
     latest = df_sorted.iloc[-1]
     prev = df_sorted.iloc[-2]
 
-    st.write(f"最新年：{int(latest['時間軸(年次)'])} 年")
-    st.write(f"前年：{int(prev['時間軸(年次)'])} 年")
+    st.write(f"最新年：{int(latest['時間軸(年次)'])} 年  前年：{int(prev['時間軸(年次)'])} 年")
 
     #2列のレイアウト
     col1, col2 = st.columns(2)
