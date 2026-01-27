@@ -6,7 +6,8 @@ import plotly.express as px
 st.title('人口動態調査 人口動態統計 確定数 出生')
 df=pd.read_csv('FEH_00450011_260126102708.csv')
 
-st.markdown('このアプリは e-Stat の人口動態調査「出生数」のデータを可視化するものです。年代を選択し、男女・合計の出生数の推移を比較できます。')
+st.markdown('このアプリは e-Stat の人口動態調査「出生数」のデータを可視化するものです。サイドバーで年代を選択し、男女・合計の出生数の推移を比較できます。')
+st.markdown('このデータの期間は1921年から2023年で、年次別にみた出生数・出生率（人口千対）・出生性比及び合計特殊出生率を知ることができます。')
 
 # 「2023年」→ 2023 に変換
 df['時間軸(年次)'] = df['時間軸(年次)'].str.replace('年', '').astype(int)
@@ -16,9 +17,10 @@ cols = ['出生数_総数【人】', '出生数_男【人】', '出生数_女【
 for c in cols:
     df[c] = df[c].str.replace(',', '').astype(int)
 
+#数値化
 df['合計特殊出生率'] = pd.to_numeric(df['合計特殊出生率'], errors='coerce')
 
-
+#サイドバー
 with st.sidebar:
     st.subheader('抽出条件')
     year=st.multiselect('年代を選択してください（複数選択可）',
@@ -26,15 +28,23 @@ with st.sidebar:
     
 df=df[df['時間軸(年次)'].isin(year)]
 
+#データ表
 st.dataframe(df,width=600,height=200)
 
+#前年比の計算
 st.subheader('前年比')
+#年代順に並べ替え
 df_sorted = df.sort_values('時間軸(年次)')
 
+#年が2つ以上選ばれているときだけ計算
 if len(df_sorted) >= 2:
     latest = df_sorted.iloc[-1]
     prev = df_sorted.iloc[-2]
 
+    st.write(f"最新年：{latest['時間軸(年次)']} 年")
+    st.write(f"前年：{prev['時間軸(年次)']} 年")
+
+    #2列のレイアウト
     col1, col2 = st.columns(2)
 
     with col1:
@@ -69,7 +79,7 @@ df_long['分類'] = df_long['分類'].replace({
     '出生数_女【人】': '女'
 })
 
-
+#出生数の散布図
 fig=px.scatter(df_long,
                x='時間軸(年次)',
                y='出生数',
@@ -79,10 +89,11 @@ fig=px.scatter(df_long,
                trendline='ols')
 st.plotly_chart(fig)
 
+#グラフの説明文折りたたみ
 with st.expander('出生数グラフの説明を見る'):
     st.write('このグラフは、合計・男・女の出生数の推移を比較する散布図です。')
 
-
+#合計特殊出生率の棒グラフ
 df_bar = df.copy()
 df_bar['時間軸(年次)'] = df_bar['時間軸(年次)'].astype(str)
 
@@ -98,3 +109,4 @@ st.plotly_chart(fig_rate)
 with st.expander('合計特殊出生率グラフの説明を見る'):
     st.write('この棒グラフは、各年代の合計特殊出生率を示しています。')
 
+st.write('アプリで可視化した出生数の推移をみると、日本の出生数は減少傾向にあることが確認できる。また、男女別でみると、出生数の男女比はほぼ一定で推移しており、大きな変動は見られない。')
