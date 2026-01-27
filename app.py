@@ -1,0 +1,114 @@
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+import plotly.express as px
+
+st.title('人口動態統計 確定数 出生')
+df=pd.read_csv('FEH_00450011_260126102708.csv')
+
+st.write('')
+st.write('このアプリは e-Stat の「人口動態調査 人口動態統計 確定数 出生」のデータを可視化するものです。サイドバーで年代を選択し、男女・合計の出生数の推移を比較できます。')
+st.write('このデータの期間は1899年から2023年で、年次別にみた日本の出生数・出生率（人口千対）・出生性比及び合計特殊出生率を知ることができます。')
+st.write('')
+
+# 「2023年」→ 2023 に変換
+df['時間軸(年次)'] = df['時間軸(年次)'].str.replace('年', '').astype(int)
+
+# カンマ付き数値をすべて数値化
+cols = ['出生数_総数【人】', '出生数_男【人】', '出生数_女【人】']
+for c in cols:
+    df[c] = df[c].str.replace(',', '').astype(int)
+
+#数値化
+df['合計特殊出生率'] = pd.to_numeric(df['合計特殊出生率'], errors='coerce')
+
+#サイドバー
+with st.sidebar:
+    st.subheader('抽出条件')
+    year=st.multiselect('年代を選択してください（複数選択可）',
+                          df['時間軸(年次)'].unique())
+    
+df=df[df['時間軸(年次)'].isin(year)]
+
+#データ表
+st.dataframe(df,width=600,height=200)
+
+#前年比の計算
+st.subheader('前年比')
+#年代順に並べ替え
+df_sorted = df.sort_values('時間軸(年次)')
+
+#年が2つ以上選ばれているときだけ計算
+if len(df_sorted) >= 2:
+    latest = df_sorted.iloc[-1]
+    prev = df_sorted.iloc[-2]
+
+    st.write(f"最新年：{int(latest['時間軸(年次)'])} 年 | 前年：{int(prev['時間軸(年次)'])} 年")
+
+    #2列のレイアウト
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.metric(
+            label="最新年の出生数（合計）",
+            value=f"{int(latest['出生数_総数【人】']):,} 人",
+            delta=f"{int(latest['出生数_総数【人】'] - prev['出生数_総数【人】']):,} 人"
+        )
+
+    with col2:
+        st.metric(
+            label="最新年の合計特殊出生率",
+            value=latest['合計特殊出生率'],
+            delta=round(latest['合計特殊出生率'] - prev['合計特殊出生率'], 2)
+        )
+
+else:
+    st.info("※ 指標を表示するには、2 年以上選択してください。")
+
+df_long = df.melt(
+    id_vars='時間軸(年次)',
+    value_vars=['出生数_総数【人】', '出生数_男【人】', '出生数_女【人】'],
+    var_name='分類',
+    value_name='出生数'
+)
+
+df_long['分類'] = df_long['分類'].replace({
+    '出生数_総数【人】': '合計',
+    '出生数_男【人】': '男',
+    '出生数_女【人】': '女'
+})
+
+#出生数の散布図
+fig=px.scatter(df_long,
+               x='時間軸(年次)',
+               y='出生数',
+               color='分類',
+               labels={'時間軸(年次)': '年代', '出生数_総数【人】': '出生数'},
+               title='年代別出生数',
+               trendline='ols')
+st.plotly_chart(fig)
+
+#グラフの説明文折りたたみ
+with st.expander('出生数グラフの説明を見る'):
+    st.write('このグラフは、合計・男・女の出生数の推移を比較する散布図です。')
+
+#合計特殊出生率の棒グラフ
+df_bar = df.copy()
+df_bar['時間軸(年次)'] = df_bar['時間軸(年次)'].astype(str)
+
+fig_rate = px.bar(
+    df_bar,
+    x='時間軸(年次)',
+    y='合計特殊出生率',
+    title='年代別 合計特殊出生率',
+    labels={'時間軸(年次)': '年代', '合計特殊出生率': '合計特殊出生率'},
+)
+st.plotly_chart(fig_rate)
+
+with st.expander('合計特殊出生率グラフの説明を見る'):
+    st.write('この棒グラフは、各年代の合計特殊出生率を示しています。')
+    st.write('合計特殊出生率とは、15歳から49歳までの女性が一生のうちに生む子供の数を示す指標です。')
+
+st.write('')
+st.write('アプリで可視化した出生数の推移をみると、日本の出生数は減少傾向にあることが確認できる。また、男女別でみると、出生数の男女比はほぼ一定で推移しており、大きな変動は見られない。合計特殊出生率の推移を表した棒グラフからは、出生率が低下していることが読み取れる。さらに、前年比からは出生数・出生率ともに前年より減少していることが確認できる。')
+st.write('これらの結果から、日本の出生数減少は長期的かつ深刻な傾向であり、出生数の低下が少子高齢化に大きな影響を与えていると考えられる。今後は、子育て支援や働き方改革など、出生率向上に向けた社会的取り組みの重要性が一層高まると考えられる。')
