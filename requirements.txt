@@ -1,9 +1,7 @@
-kaleido==0.2.1
-matplotlib
-matplotlib-inline
-openpyxl
+streamlit>=1.40.0
 pandas
+matplotlib
 plotly
-streamlit
+kaleido==0.2.1
+openpyxl
 statsmodels
-numpy<2.0.0
