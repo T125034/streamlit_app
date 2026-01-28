@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 
 st.title('人口動態統計 確定数 出生')
-df=pd.read_csv('FEH_00450011_260126102708.csv')
+df=pd.read_csv('FEH_00450011_260126102708(1).csv')
 
 st.write('')
 st.write('このアプリは e-Stat の「人口動態調査 人口動態統計 確定数 出生」のデータを可視化するものです。サイドバーで年代を選択し、男女・合計の出生数の推移を比較できます。')
